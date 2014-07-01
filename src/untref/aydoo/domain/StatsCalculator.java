@@ -20,11 +20,13 @@ public class StatsCalculator {
 	private int contadorDeRegistros = 0;
 	private Map<String, Integer> contadorPorBicicleta = new HashMap<String, Integer>();
 	private Map<Recorrido, Integer> contadorPorRecorrido = new HashMap<Recorrido, Integer>();
+	private Map<String, Integer> tiempoPorBicicleta = new HashMap<String, Integer>();
 	private long acumuladorDeTiempos = 0L;
 
 	public synchronized void addPrestamo(Prestamo prestamo) {
 		updateContadorPorBicicleta(prestamo);
 		updateContadorPorRecorrido(prestamo);
+		updateTiempoPorBicicleta(prestamo);
 		updateAcumuladorDeTiempos(prestamo);
 
 		contadorDeRegistros++;
@@ -48,6 +50,16 @@ public class StatsCalculator {
 			contadorPorRecorrido.put(prestamo.getRecorrido(), cantidadUsos + 1);
 		} else {
 			contadorPorRecorrido.put(prestamo.getRecorrido(), 1);
+		}
+	}
+
+	private void updateTiempoPorBicicleta(Prestamo prestamo) {
+		Integer tiempo = tiempoPorBicicleta
+				.get(prestamo.getBicicletaId());
+		if (tiempo != null) {
+			tiempoPorBicicleta.put(prestamo.getBicicletaId(), tiempoPorBicicleta.get(prestamo.getBicicletaId()) + prestamo.getTiempoUso());
+		} else {
+			tiempoPorBicicleta.put(prestamo.getBicicletaId(), prestamo.getTiempoUso());
 		}
 	}
 
@@ -106,6 +118,22 @@ public class StatsCalculator {
 		return recorridos;
 	}
 
+	public Map<String, Integer> getBicicletasUsadasMasTiempo() {
+		Integer maximo = (tiempoPorBicicleta.size() == 0) ? 0
+				: tiempoPorBicicleta.entrySet().iterator().next().getValue();
+		Map<String, Integer> tiempos = new HashMap<String, Integer>();
+		for (Entry<String, Integer> entry : tiempoPorBicicleta.entrySet()) {
+			if (entry.getValue() == maximo) {
+				tiempos.put(entry.getKey(), entry.getValue());
+			} else if (entry.getValue() > maximo) {
+				maximo = entry.getValue();
+				tiempos = new HashMap<String, Integer>();
+				tiempos.put(entry.getKey(), tiempoPorBicicleta.get(entry.getKey()));
+			}
+		}
+		return tiempos;
+	}
+
 	public int getTiempoPromedioUso() {
 		return (contadorDeRegistros == 0) ? 0 : (int) acumuladorDeTiempos / contadorDeRegistros;
 	}
@@ -133,7 +161,8 @@ public class StatsCalculator {
 				+ "\n" + "bicicleta-utilizada-menos-veces: "
 				+ getBicicletasMenosUsadas() + "\n"
 				+ "recorrido-mas-veces-realizado: " + getRecorridosMasUsados()
-				+ "\n" + "tiempo-promedio-de-uso: " + getTiempoPromedioUso();
+				+ "\n" + "tiempo-promedio-de-uso: " + getTiempoPromedioUso()
+				+ "\n" + "bicicletas-mas-tiempo-utilizadas:" + getBicicletasUsadasMasTiempo();
 	}
 
 }
