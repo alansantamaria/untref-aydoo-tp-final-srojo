@@ -41,7 +41,8 @@ public class DaemonThreadTest {
 				+ "bicicleta-utilizada-mas-veces: [403]\n"
 				+ "bicicleta-utilizada-menos-veces: [339, 346, 351, 358, 370, 441, 460, 478]\n"
 				+ "recorrido-mas-veces-realizado: [[7, 3]]\n"
-				+ "tiempo-promedio-de-uso: 22\n";
+				+ "tiempo-promedio-de-uso: 22\n"
+				+ "bicicletas-mas-tiempo-utilizadas:{430=85}\n";
 
 		daemonThread.run();
 

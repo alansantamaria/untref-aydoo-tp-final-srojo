@@ -34,12 +34,12 @@ public class OnDemandRunnerTest {
 				+ "bicicleta-utilizada-mas-veces: [430, 443]\n"
 				+ "bicicleta-utilizada-menos-veces: [361, 369, 37, 370, 42, 428, 444, 446, 48, 482, 483]\n"
 				+ "recorrido-mas-veces-realizado: [[7, 3]]\n"
-				+ "tiempo-promedio-de-uso: 28\n";
+				+ "tiempo-promedio-de-uso: 28\n"
+				+ "bicicletas-mas-tiempo-utilizadas:{358=208}\n";
 
 		runner.doIt();
 
 		String yamlContent = getYamlContent();
-
 		Assert.assertEquals(yamlContentExpected, yamlContent);
 	}
 
