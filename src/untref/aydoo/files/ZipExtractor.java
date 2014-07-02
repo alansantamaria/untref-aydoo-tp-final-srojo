@@ -38,12 +38,12 @@ public class ZipExtractor {
 				filePath = getFreeFilePath(outputPath, ze.getName());
 				os = new FileOutputStream(filePath);
 				fileList.add(filePath);
-
-				int chunk;
-				while ((chunk = zis.read()) != -1) {
-					os.write(chunk);
+				int readed;
+				byte [] buffer = new byte[1024];
+				while (0 < (readed = zis.read(buffer))){
+					os.write(buffer,0, readed);
 				}
-
+				
 			}
 
 			os.close();

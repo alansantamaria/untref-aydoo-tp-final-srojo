@@ -57,3 +57,24 @@ $ java -jar build/dist/procesador_estadistico.jar -d directorio/a/procesar
 
 Con el argumento `-d` se indica el nuevo modo de funcionamiento. Es importante respetar el orden de los argumentos.
 
+### Optimizacion del tiempo insumido para el procesamiento (segunda parte del trabajo practico)
+La aplicacion maneja distintos hilos para cada uno de los archivos .csv que van a ser procesados, optimizando el tiempo de procesamiento. Sin embargo el proceso de calculo demoraba demasiado tiempo. Luego de indagar, me di cuenta que al descomprimir el zip, cada archivo que iba extrayendo se iba incrementando muy gradualmente, lo que dilataba mucho la operacion. Identifique el metodo encargado puntualmente de realizar dicha tarea y descubri que se estaba untilizando el metodo read() de la clase ZipInputStream. El mismo si no recibe parametros, arma el archivo que se descomprime byte a byte. La solucion a esto, es enviarle como parametro un vector de bytes de un tamaño mayor a modo de buffer:
+
+codigo viejo:
+	int chunk;
+	while ((chunk = zis.read()) != -1) {
+		os.write(chunk);
+	}
+
+codigo nuevo:
+	int readed;
+	byte [] buffer = new byte[1024];
+	while (0 < (readed = zis.read(buffer))){
+		os.write(buffer,0, readed);
+	}
+
+Una vez implementado esto, los tiempos de procesamiento cayeron drasticamente.
+Las pruebas se realizaron con un archivo zip que contenia tres arhivos .csv de 60 MB cada uno (aproximadamente 1 millon de registros cada uno). Los tiempos previos a la modificacion rondaban los 18 minutos en tren intentos.
+A partir de los nuevos cambios la aplicacion es capaz de procesar la misma informacion en un promedio de 11 segundos en tres intentos.
+Para medir el tiempo utilize el propio log de la aplicacion, que almacena el horario preciso de arranque y finalizacion de ejecucion.
+

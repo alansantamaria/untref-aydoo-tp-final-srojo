@@ -13,10 +13,10 @@ import untref.aydoo.files.FileManager;
 
 public class FileManagerTest {
 
-	private static final String INPUT_DIR = "resourcesTests/dirWithZips";
-	private static final String TEST_DIR_EXISTS = "resourcesTests/testExists";
+	private static final String INPUT_DIR = "resourcesTests"+File.separator+"dirWithZips";
+	private static final String TEST_DIR_EXISTS = "resourcesTests"+File.separator+"testExists";
 	private static final String CSV_EXT = "CSV";
-	private static final String TEST_DIR_NOT_EXISTS = "resourcesTests/testNotExists";
+	private static final String TEST_DIR_NOT_EXISTS = "resourcesTests"+File.separator+"testNotExists";
 
 	@After
 	public void tearDown() throws Exception {
@@ -56,10 +56,10 @@ public class FileManagerTest {
 		Collections.sort(files);
 
 		List<String> filesExpected = new ArrayList<String>();
-		filesExpected.add("resourcesTests/testExists/recorridos1.csv");
-		filesExpected.add("resourcesTests/testExists/recorridos2.csv");
-		filesExpected.add("resourcesTests/testExists/recorridos3.csv");
-		filesExpected.add("resourcesTests/testExists/recorridos4.csv");
+		filesExpected.add("resourcesTests"+File.separator+"testExists"+File.separator+"recorridos1.csv");
+		filesExpected.add("resourcesTests"+File.separator+"testExists"+File.separator+"recorridos2.csv");
+		filesExpected.add("resourcesTests"+File.separator+"testExists"+File.separator+"recorridos3.csv");
+		filesExpected.add("resourcesTests"+File.separator+"testExists"+File.separator+"recorridos4.csv");
 		Collections.sort(filesExpected);
 
 		Assert.assertEquals(filesExpected, files);
